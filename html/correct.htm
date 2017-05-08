@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+   {add_to_html_head}
+</head>
+
+<body>
+  {header}
+  {correct_answer_resp}
+  <br/>
+  {after_reply}<br/>
+  <form action="treasure.pl">
+    <input type="hidden" name="game" value="{game}" />
+    <input type="hidden" name="team" value="{team}" />
+    <input type="hidden" name="page" value="{page}" />
+    <input type="submit" value="{next_question}" />
+  </form>
+</body>
+
+</html>
