@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {add_to_html_head}
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+    //var x = document.getElementById("demo");
+    //x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude;
+
+    var theForm = document.forms['questionForm'];
+    // Create a hidden input elements, and append to the form:
+    var input1 = document.createElement('input');
+    input1.type = 'hidden';
+    input1.name = 'lat';
+    input1.value = position.coords.latitude;
+    theForm.appendChild(input1);
+
+    var input2 = document.createElement('input');
+    input2.type = 'hidden';
+    input2.name = 'lon';
+    input2.value = position.coords.longitude;
+    theForm.appendChild(input2);
+}
+window.onload = getLocation;
+</script>
+</head>
+
+<body>
+  {header}
+  {question}
+  <form action="treasure.pl" name="questionForm">
+    <input type="hidden" name="game" value="{game}" />
+    <input type="hidden" name="team" value="{team}" />
+    <input type="hidden" name="page" value="{page}" />
+    <input type="hidden" name="attempt" value="{attempt}" />
+    <br/>
+    <input type="text" name="answer" value="" style="width:68%; border:thin solid green" autocomplete="off" />
+    <input type="submit" value="{submit}" style="width:28%"/>
+  </form>
+
+  <!-- <p id="demo">.</p> -->
+</body>
+
+</html>
