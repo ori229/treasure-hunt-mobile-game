@@ -22,5 +22,4 @@ https://www.google.com/maps/d/viewer?mid=1OLFkyx3dV89njpVz48Y93EJfroM&ll=31.7719
 
 הנה קישור למשחק על שרת שזמין לרוב (אבל אין לסמוך עליו שהוא בהכרח יהיה זמין):
 
-http://icc-aleph22.hosted.exlibrisgroup.com/aleph-cgi/treasure/treasure.pl?game=jer_heb
-
+https://icc-aleph22.hosted.exlibrisgroup.com/aleph-cgi/treasure/treasure.pl?game=jer_heb
