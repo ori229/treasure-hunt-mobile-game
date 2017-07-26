@@ -43,16 +43,51 @@ if (!$team) {
 
 ##### admin page
 if ($team eq 'admin') {
+  print "<table border=1>";
   foreach my $file ( glob( $path . 'data/team*' ) ) {
-    print "$file <br/>\n <pre>";
-    print slurp($file),"</pre>";
-    print "___________________<br/><br/><br/><br/>\n";
+    my $theTeam = $file; $theTeam=~s/.*_//; $theTeam=~s/\.data//;
+    print "<tr>";
+    print "<td>";
+    print "<a href=\"treasure.pl?game=$game&team=$theTeam&showMap=true\">$theTeam</a>";
+    print "</td>\n";
+
+    print "<td>";
+    print "<a href=\"treasure.pl?game=$game&team=$theTeam&showLog=true\">log</a>";
+    print "</td>\n";
+
+    my $team_text = slurp($file);
+    my $start_time = 0;
+    if ($team_text=~/start timestamp:(\d*)/s) {
+      $start_time = $1;
+    }
+    print "<td>";
+    my $elapsed_time = calc_elapsed($team_text);
+    print "elapsed until last timestamp:$elapsed_time";
+    print "</td>\n";
+=pod
+    print "<td>";
+    if ($team_text=~/.*points:(\d*)/s) {
+      my $current_points = $1;
+      print "points: :$current_points";
+    } else {
+      print "-"
+    }
+    print "</td>\n";
+=cut
+
+    #print " - $file <br/>\n";
+    print "<br/>\n";  #  <pre>";
+    print "</tr>";
+    #print slurp($file),"</pre>";
+    #print "___________________<br/><br/><br/><br/>\n";
   }
+  print "</table>";
   exit;
 }
 
 my $team_file = $path.'data/team_'.$game.'_'.$team.'.data';
 if ($q->param('showMap')) {  showMap($team_file); }
+if ($q->param('showLog')) {  showLog($team_file); }
 
 open( OUT_F, ">>$team_file") or die "Cannot open $team_file as output\n" ;
 my $team_text = '';
@@ -67,12 +102,7 @@ my $elapsed_time = 0;
   if ($team_text=~/.*points:(\d*)/s) {
     $current_points = $1;
   }
-  if ($team_text=~/start timestamp:(\d*)/s) {
-    $start_time = $1;
-    $elapsed_time = wdhms(time() - $start_time);
-  } else {
-    $elapsed_time = wdhms(1); # for the first page: 1 sec
-  }
+  $elapsed_time = calc_elapsed($team_text);
 
 my $page_param = $q->param('page');
 my $page_no = substr($page_param,1,2);
@@ -102,6 +132,7 @@ if ($page_param && $answer) {
   # log geo location
   if ( $q->param('lat')  ){
     print OUT_F "GEO: lat " . $q->param('lat') . " lon " . $q->param('lon') . "\n";
+    print OUT_F "log time: $now\n";
   }
 
   my $correct_answer = $conf{$page_no.'_a'} ; print "<!-- ooo  $page_no $correct_answer -->";
@@ -117,6 +148,7 @@ if ($page_param && $answer) {
     output_html($out_html);
     print OUT_F "CORRECT page: $page_no attempt:$attempt correct_answer:$correct_answer . answer:$answer elapsed:$elapsed_time\n";
     print OUT_F "points:$current_points\n";
+    print OUT_F "timestamp page: $page_no timestamp now:".time()."\n";
     exit;
   } else {
     print OUT_F "WRONG page: $page_no attempt:$attempt correct_answer:$correct_answer . answer:$answer elapsed:$elapsed_time\n";
@@ -133,6 +165,7 @@ if ($page_param && $answer) {
       output_html($out_html);
       print OUT_F "MANY_WRONG page: $page_no attempt:$attempt correct_answer:$correct_answer . answer:$answer elapsed:$elapsed_time\n";
       print OUT_F "points:$current_points\n";
+      print OUT_F "timestamp page: $page_no timestamp now:".time()."\n";
       exit;
     }
 
@@ -190,6 +223,42 @@ sub hidden_page_num{
 }
 
 ###############################################################################
+sub calc_elapsed{
+  my $team_text= shift;
+  my $start_time;
+  if ($team_text=~/start timestamp:(\d*)/s) {
+    $start_time = $1;
+    #$elapsed_time = wdhms(time() - $start_time);
+  } else {
+    $start_time = time() - 1; # for the first page: 1 sec
+  }
+
+  # reduce time in the allowed stop
+  my $time_to_reduce = 0;
+  if ($conf{'possible_pause'}) {
+    my $point_stop  = $conf{'possible_pause'};
+    my $point_after = $point_stop + 1;
+    my $time_before_stop=0; my $time_after_stop=0;
+    if ($team_text=~/.*timestamp page: $point_stop timestamp now:(\d*)/s) {
+      $time_before_stop = $1;
+    }
+    if ($team_text=~/.*timestamp page: $point_after timestamp now:(\d*)/s) {
+      $time_after_stop = $1;
+    }
+    if ($time_before_stop>0 && $time_after_stop>0) {
+      $time_to_reduce = $time_after_stop - $time_before_stop;
+    }
+  }
+
+
+  if ($team_text=~/.*timestamp page: (\d*) timestamp now:(\d*)/s) {
+    my $last_timestamp = $2;
+    return wdhms($last_timestamp - $start_time - $time_to_reduce);
+  }
+  return 0;
+}
+
+###############################################################################
 sub slurp {
     my $file = shift;
     open my $fh, '<', $file or die "can not find $file";
@@ -235,5 +304,14 @@ sub showMap {
     my $html_text = slurp($path . 'html/showMap.htm');
     $html_text=~s/{values}/$values/;
     print $html_text;
+    exit;
+}
+
+sub showLog {
+    my $file = shift;
+    $team_text = slurp($team_file);
+    print "$file <br/>\n <pre>";
+    print slurp($file),"</pre>";
+    print "___________________<br/><br/><br/><br/>\n";
     exit;
 }
