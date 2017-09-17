@@ -1,5 +1,5 @@
-#!/path/to/bin/perl
-# https://.../treasure.pl
+#!/exlibris/aleph/a22_1/product/bin/perl
+# https://icc-aleph22.hosted.exlibrisgroup.com/aleph-cgi/treasure/treasure.pl
 # ?page=7013432&team=boys
 # ?page=7013432&answer=hill&attempt=2&team=boys
 # ?page=7013432&reveal=true&team=boys
@@ -89,6 +89,17 @@ my $team_file = $path.'data/team_'.$game.'_'.$team.'.data';
 if ($q->param('showMap')) {  showMap($team_file); }
 if ($q->param('showLog')) {  showLog($team_file); }
 
+my $page_param = $q->param('page');
+my $page_no = substr($page_param,1,2);
+my $the_question = $conf{$page_no.'_q'} ; #print "ooo  $page_no $the_question";
+my $answer = $q->param('answer');
+my $attempt = $q->param('attempt');
+
+if ($page_no eq '01' && !$answer && -f $team_file) {
+  print "Team name already taken. Please pick a new name\n";
+  exit;
+}
+
 open( OUT_F, ">>$team_file") or die "Cannot open $team_file as output\n" ;
 my $team_text = '';
 my $current_points = 0;
@@ -104,12 +115,7 @@ my $elapsed_time = 0;
   }
   $elapsed_time = calc_elapsed($team_text);
 
-my $page_param = $q->param('page');
-my $page_no = substr($page_param,1,2);
-my $the_question = $conf{$page_no.'_q'} ; #print "ooo  $page_no $the_question";
 
-my $answer = $q->param('answer');
-my $attempt = $q->param('attempt');
 if (!$attempt) { $attempt = 1 };
 ##### question page:
 if ($page_param && !$answer) {
