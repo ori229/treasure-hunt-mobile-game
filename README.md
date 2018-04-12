@@ -26,13 +26,23 @@ https://www.google.com/maps/d/viewer?mid=1OLFkyx3dV89njpVz48Y93EJfroM&ll=31.7719
 https://icc-aleph22.hosted.exlibrisgroup.com/aleph-cgi/treasure/treasure.pl?game=jer_heb
 
 רעיונות לשיפור:
+
 להוסיף לטופס את מספר המשתתפים. שם משפחה של בעל הטלפון.
+
 לשפר את טבלת  admin
+
 להוריד את המפה והGPS
+
 לתקן עציוני
-להחזיר את כתף הינום 
+
+להחזיר את כתף הינום
+
 כפתור העבר שאלה
+
 להדגיש בית אות המוצר
+
 ברקוד
+
 לעשות הפסקה בכל תחנה
+
 לתכנן מסלול נוסף באיזור מאותה נקודה
