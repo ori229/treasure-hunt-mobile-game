@@ -32,6 +32,7 @@ https://developers.exlibrisgroup.com/temp/treasure/treasure.php
 להוסיף לטופס את מספר המשתתפים. שם משפחה של בעל הטלפון.
 
 לשפר את טבלת  admin
+https://developers.exlibrisgroup.com/temp/treasure/treasure.php?game=jer_heb&team=admin
 
 להוריד את המפה והGPS
 
