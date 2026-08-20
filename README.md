@@ -16,7 +16,8 @@ Treasure hunt using responsive HTML and perl on the server side
 
 https://www.google.com/maps/d/viewer?mid=1OLFkyx3dV89njpVz48Y93EJfroM&ll=31.771979297091868%2C35.22696382208039&z=17&hl=iw
 
-https://github.com/ori229/treasure-hunt-mobile-game/blob/master/map_treasure.png
+https://developers.exlibrisgroup.com/temp/treasure/map_treasure.png
+
 
 יש להדפיס את המפה בצבע
 עם מספר עותקים כמספר הקבוצות המשתתפות.
